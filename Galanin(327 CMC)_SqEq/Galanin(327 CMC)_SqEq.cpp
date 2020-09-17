@@ -5,10 +5,28 @@
 
 #include <stdio.h> 
 #include <math.h>
+bool IsZero(double a);
 void Unitest();
-int Test(double* params);
+int Test_Search_For_Roots(double* params);
+void Test_Is_Zero(double value, bool test_result);
 int Search_For_Roots(double a, double b, double c, double* x1, double* x2);
 
+
+/// 
+//! Compare double type variable with 0
+//!
+//! @param [in]	a - comparison variable
+//! 
+//! @note In case of None it prints warning to output 
+/// 
+bool IsZero(double a)
+{
+	double eps = 1e-10;
+	if (fabs(a) < eps)
+		return true;
+	else
+		return false;
+}
 
 /// 
 //! Lounch tests for the function Search_For_Roots(...)
@@ -25,11 +43,17 @@ void Unitest()
 							0,1,1,-1,0,0,
 							1,0,1,0,0,0,
 	};
-	int tst = 0, i = 0;
+	struct izparams
+	{
+		double value[3];
+		bool result[3];
+	};
+	int tst = 0, i = 0; 
+	struct izparams val = {0, -20, 20, true, false, false};
 	printf("Start the Unitest programm\n\n");
 	for (i = 0; i < 6; i++)
 	{
-		tst = Test(params[i]);
+		tst = Test_Search_For_Roots(params[i]);
 		if (tst == 1)
 			printf("[Passed] Your funtion returns correct number of roots and correct roots\n");
 		else if (tst == 0)
@@ -37,19 +61,21 @@ void Unitest()
 		else
 			printf("[Not Passed] Your funtion returns incorrect number of roots\n");
 	}
+	for (i = 0; i < 3; i++)
+		Test_Is_Zero(val.value[i], val.result);
+
 }
 
 /// 
 //! Check roots and thier number with correct answer in params[...] 
 //!
-//! @param [out] params Pointer to the array with 
-//!              correct answers and parametrs
+//! @param [out] params Pointer to the array with\n correct answers and parametrs
 //! @return Int status of execution
 //! @note 1  - Correct execution\n 
 //!       0  - incorrect roots, but correct number of roots\n
 //!       -1 - incorrect number of roots\n
 /// 
-int Test(double* params)
+int Test_Search_For_Roots(double* params)
 {
 	double numb = 0, x1 = 0, x2 = 0;
 	numb = Search_For_Roots(params[0], params[1], params[2], &x1, &x2);
@@ -71,6 +97,25 @@ int Test(double* params)
 }
 
 /// 
+//! Check correct output for IsZero function 
+//!
+//! @param [in] value - test value
+//! @param [in] test_result - correct output
+//! @return Int status of execution
+//! @note true  - Correct execution\n 
+//!       false - incorrect number of roots\n
+/// 
+void Test_Is_Zero(double value, bool test_result)
+{
+	bool result = false;
+	result= IsZero(value);
+	if (result = test_result)
+		printf("[Passed] Your IsZero test has correct otput\n");
+	else
+		printf("[Not Passed] Your IsZero test has incorrect otput\n");
+}
+
+/// 
 //! Searching for roots of square equation
 //!
 //! @param [in] a X^2 coefficient
@@ -89,17 +134,19 @@ int Search_For_Roots(double a, double b, double c, double* x1, double* x2)
 {
 	int numb = 0;
 	double disc = 0;
-	if (a == 0)
+	if (IsZero(a))
 		return -1;
 	else
 		disc = b * b - 4 * a * c;
+	if (isnan(b) || isnan(c))
+		return -2;
 	if (disc > 0)
 	{
 		numb = 2;
 		*x1 = (-b - sqrt(disc)) / 2 / a;
 		*x2 = (-b + sqrt(disc)) / 2 / a;
 	}
-	else if (disc == 0)
+	else if (IsZero(disc))
 	{
 		numb = 1;
 		*x1 = -b / 2 / a;
