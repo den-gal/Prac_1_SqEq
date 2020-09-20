@@ -1,3 +1,4 @@
 /Doxygen_Doc
 /Debug
+/README.txt
 /.vs/Galanin(327 CMC)_SqEq/v16
