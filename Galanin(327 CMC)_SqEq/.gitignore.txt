@@ -1,0 +1,3 @@
+/Doxygen_Doc
+/Debug
+/.vs/Galanin(327 CMC)_SqEq/v16
